@@ -37,14 +37,14 @@ blurry, out of focus, low resolution, extra limbs, deformed hands, distorted fac
 ## 三、生成結果展示與評估  
 
 ### 📸 圖像成果 1  
-![2WK0EKXXCAY7MQDR54NWAKBRG0](https://hackmd.io/_uploads/HJz68asXgg.jpg)
+![2WK0EKXXCAY7MQDR54NWAKBRG0](https://github.com/user-attachments/assets/9af78ace-a8e4-46ef-9484-30627e5a5b48)
   
 **特徵說明**：糖葫蘆由 4 顆明確的草莓構成，質感晶亮、色彩自然，小女孩臉部清晰，背景古街風格明確，整體光影柔和寫實。  
 
 ---
 
 ### 📸 圖像成果 2  
-![65RQ35R07EEG365A8ZVWSVVWQ0](https://hackmd.io/_uploads/r19RU6smxl.jpg)
+![65RQ35R07EEG365A8ZVWSVVWQ0](https://github.com/user-attachments/assets/fc8ee764-98b9-4300-b47b-5f3634460edb)
   
 **特徵說明**：糖葫蘆略超出 5 顆（共 6 顆），但排列整齊，視覺效果依然出色。人物與背景仍保持高品質、穩定風格。  
 
