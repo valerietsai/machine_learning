@@ -1,8 +1,3 @@
----
-title: "\U0001F4CA ChatGPT 輔助 Stable Diffusion Prompt 生成效益分析報告"
-
----
-
 # 📊 ChatGPT 輔助 Stable Diffusion Prompt 生成效益分析報告  
 
 ---
