@@ -25,7 +25,9 @@
 .
 ├── HW1_generate_ai_using_i.md
 │
-├── HW2_generate_ai_using_ii.md
+├── HW2_generate_ai_using_ii
+│   ├── AI醫學影像判讀.pdf
+│   └── README.md
 │
 ├── HW3_generate_ai_using_iii.md
 │
