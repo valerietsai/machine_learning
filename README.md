@@ -23,16 +23,11 @@
 
 ```
 .
-├── HW1_Linear_Regression/
-│   ├── data/
-│   ├── notebook.ipynb
-│   └── README.md (可選，用以說明該次作業的細節)
+├── HW1_generate_ai_using_i.md
 │
-├── HW2_Logistic_Regression/
-│   ├── ...
+├── HW2_generate_ai_using_ii.md
 │
-├── HW3_Decision_Trees_and_Random_Forest/
-│   ├── ...
+├── HW3_generate_ai_using_iii.md
 │
 └── ... (其他作業)
 ```
@@ -66,7 +61,7 @@
 
 1.  **複製儲存庫：**
     ```bash
-    git clone [https://github.com/](https://github.com/)valerietsai/meachine_learning.git
+    git clone https://github.com/valerietsai/machine_learning.git
     ```
 
 2.  **移動至專案目錄：**
