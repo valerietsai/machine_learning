@@ -91,6 +91,9 @@
   }
 }
 
+/* 網頁不出現"輸入游標" */
+html,body,div{user-select: none;} 
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
