@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>線性迴歸 Linear Regression</title>
+        
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        
+        <style>
+            {# 整體網頁樣式 #}
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 設定字體 */
+                margin: 20px; /* 外邊距 */
+                background-color: #abababff; /* 背景顏色 */
+                color: #333; /* 文字顏色 */
+            }
+
+            {# 主要內容容器樣式 #}
+            .container {
+                max-width: 900px; /* 最大寬度 */
+                margin: auto; /* 居中顯示 */
+                background: #ffffffff; /* 背景顏色 */
+                padding: 30px; /* 內邊距 */
+                border-radius: 8px; /* 圓角邊框 */
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* 陰影效果 */
+            }
+
+            {# 標題樣式 #}
+            h1 {
+                color: #000000ff; /* 標題顏色 */
+                text-align: center; /* 文字置中 */
+                margin-bottom: 30px; /* 下方外邊距 */
+            }
+
+            {# 控制項區域樣式 #}
+            .controls {
+                display: grid; /* 使用 CSS Grid 佈局 */
+                grid-template-columns: 1fr 1fr 1fr 1fr; /* 三列佈局，每列等寬 */
+                gap: 20px; /* 網格間距 */
+                margin-bottom: 30px; /* 下方外邊距 */
+                padding: 20px; /* 內邊距 */
+                background-color: #f1f1f1; /* 背景顏色 */
+                border-radius: 5px; /* 圓角邊框 */
+            }
+
+            {# 每個控制項群組（標籤+滑桿+數值顯示）的樣式 #}
+            .control-group {
+                display: flex; /* 使用 Flexbox 佈局 */
+                flex-direction: column; /* 垂直排列 */
+            }
+
+            {# 標籤樣式 #}
+            label {
+                margin-bottom: 8px; /* 下方外邊距 */
+                font-weight: bold; /* 字體加粗 */
+                color: #555; /* 文字顏色 */
+            }
+
+            {# 滑桿（range input）的樣式 #}
+            input[type="range"] {
+                width: 100%; /* 寬度佔滿父容器 */
+                -webkit-appearance: none; /* 移除預設樣式 (適用於 Webkit 瀏覽器) */
+                height: 8px; /* 高度 */
+                border-radius: 5px; /* 圓角 */
+                background: #d3d3d3; /* 背景顏色 */
+                outline: none; /* 移除點擊時的外框 */
+                opacity: 0.7; /* 不透明度 */
+                -webkit-transition: .2s; /* 過渡效果 */
+                transition: opacity .2s; /* 過渡效果 */
+            }
+
+            {# 滑桿拖曳鈕的樣式 (適用於 Webkit 瀏覽器) #}
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none; /* 移除預設樣式 */
+                appearance: none; /* 移除預設樣式 */
+                width: 20px; /* 寬度 */
+                height: 20px; /* 高度 */
+                border-radius: 50%; /* 圓形 */
+                background: #000000ff; /* 背景顏色 */
+                cursor: pointer; /* 鼠標樣式 */
+            }
+
+            {# 數值顯示區域的樣式 #}
+            .value-display {
+                margin-top: 5px; /* 上方外邊距 */
+                text-align: center; /* 文字置中 */
+                font-weight: bold; /* 字體加粗 */
+                color: #007bff; /* 文字顏色 */
+            }
+
+            {# Plotly 圖表容器的樣式 #}
+            #plot {
+                width: 100%; /* 寬度佔滿父容器 */
+                height: 500px; /* 高度 */
+                border: 1px solid #ddd; /* 邊框 */
+                border-radius: 5px; /* 圓角 */
+                background-color: #fff; /* 背景顏色 */
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>線性迴歸視覺化工具</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="n-slider">資料量 (n):</label>
+                    <input type="range" id="n-slider" min="10" max="500" value="100" step="10">
+                    <div class="value-display" id="n-value">100</div>
+                </div>
+                
+                <div class="control-group">
+                    <label for="a-slider">斜率 (a):</label>
+                    <input type="range" id="a-slider" min="-5" max="5" value="2" step="0.1">
+                    <div class="value-display" id="a-value">2.0</div>
+                </div>
+
+                <div class="control-group">
+                    <label for="b-slider">截距 (b):</label>
+                    <input type="range" id="b-slider" min="-20" max="20" value="10" step="0.1">
+                    <div class="value-display" id="b-value">10</div>
+                </div>
+
+                <div class="control-group">
+                    <label for="var-slider">干擾變數 (noise variables):</label>
+                    <input type="range" id="var-slider" min="0" max="100" value="10" step="1">
+                    <div class="value-display" id="var-value">10</div>
+                </div>
+            </div>
+        
+            <div id="plot"></div>
+        </div>
+    
+        <script>
+            // 獲取 DOM 元素
+            const nSlider = document.getElementById('n-slider');
+            const aSlider = document.getElementById('a-slider');
+            const bSlider = document.getElementById('b-slider');
+            const varSlider = document.getElementById('var-slider');
+
+            const nValue = document.getElementById('n-value');
+            const aValue = document.getElementById('a-value');
+            const bValue = document.getElementById('b-value');
+            const varValue = document.getElementById('var-value');
+
+            const plotDiv = document.getElementById('plot');
+        
+            /* 異步函式：從後端獲取資料並繪製圖表 */
+            async function fetchDataAndPlot() {
+                // 從滑桿獲取當前設定值
+                const n = nSlider.value; // 資料點個數
+                const a = aSlider.value; // 斜率
+                const b = bSlider.value; // 截距
+                const varVal = varSlider.value; // 變異數
+            
+                // 更新顯示的數值
+                nValue.textContent = n;
+                aValue.textContent = a;
+                bValue.textContent = b;
+                varValue.textContent = varVal;
+            
+                // 建構後端 API 的 URL
+                // 假設後端有一個 `/generate_data` 端點，接收 n, a, var 參數
+                const url = `/generate_data?n=${n}&a=${a}&b=${b}&var=${varVal}`;
+                
+                try {
+                    // 發送 GET 請求到後端 API
+                    const response = await fetch(url);
+                    // 將響應解析為 JSON 格式
+                    const data = await response.json();
+                
+                    // 定義散佈圖的資料 (資料點)
+                    const scatterTrace = {
+                        x: data.x, // X 軸資料
+                        y: data.y, // Y 軸資料
+                        mode: 'markers', // 顯示為標記點
+                        type: 'scatter', // 圖表類型為散佈圖
+                        name: '資料點', // 數據系列名稱
+                        marker: {
+                            size: 8, // 標記點大小
+                            color: 'rgba(0, 123, 255, 0.7)' // 標記點顏色 (帶透明度)
+                        }
+                    };
+                
+                    // 定義線條圖的資料 (理想迴歸線)
+                    const lineTrace = {
+                        x: data.line_x, // X 軸資料
+                        y: data.line_y, // Y 軸資料
+                        mode: 'lines', // 顯示為線條
+                        type: 'scatter', // 圖表類型為散佈圖 (這裡用於繪製線條)
+                        name: '理想迴歸線', // 數據系列名稱
+                        line: {
+                            color: 'red', // 線條顏色
+                            width: 3 // 線條寬度
+                        }
+                    };
+                
+                    // 定義圖表的佈局
+                    const layout = {
+                        title: `線性迴歸 公式：y = ${a} x + ${b} + ${varVal}`, // 圖表標題，顯示當前參數
+                        xaxis: {
+                            title: 'X 值', // X 軸標籤
+                            range: [0, 10] // X 軸範圍固定為 0 到 10
+                        },
+                        yaxis: {
+                            title: 'Y 值', // Y 軸標籤
+                            autorange: true // Y 軸範圍自動調整
+                        },
+                        hovermode: 'closest' // 滑鼠懸停時顯示最接近的點的資訊
+                    };
+                
+                    // 使用 Plotly 繪製新圖表
+                    // plotDiv 是圖表的容器，[scatterTrace, lineTrace] 是要繪製的數據系列，layout 是圖表佈局
+                    Plotly.newPlot(plotDiv, [scatterTrace, lineTrace], layout);
+                
+                } catch (error) {
+                    // 錯誤處理：如果獲取資料或繪圖失敗
+                    console.error('獲取資料或繪圖時出錯:', error);
+                    // 在圖表容器中顯示錯誤訊息
+                    plotDiv.innerHTML = '<p style="color: red; text-align: center;">載入資料失敗，請檢查後端服務是否運行。</p>';
+                }
+            }
+        
+            // 監聽滑桿的 'input' 事件，當滑桿值改變時重新繪圖
+            nSlider.addEventListener('input', fetchDataAndPlot);
+            aSlider.addEventListener('input', fetchDataAndPlot);
+            bSlider.addEventListener('input', fetchDataAndPlot);
+            varSlider.addEventListener('input', fetchDataAndPlot);
+            
+            // 當 DOM 內容完全載入後，第一次繪製圖表
+            document.addEventListener('DOMContentLoaded', fetchDataAndPlot);
+        </script>
+    </body>
+</html>
