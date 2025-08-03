@@ -5,7 +5,7 @@
 
 ## 二、專案架構
 ```
-11_蔡閔惠/
+linear_regression/
 ├── app.py                  # 主 Flask 應用程式
 ├── generate_plot.py        # 用於離線生成迴歸圖的腳本
 ├── regression_plot.png     # 預先生成的圖示結果
