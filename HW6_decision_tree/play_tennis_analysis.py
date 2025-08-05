@@ -1,8 +1,32 @@
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# 放置在與腳本相同的資料夾中
+font_path = 'TaipeiSansTCBeta-Regular.ttf'
+
+# 檢查檔案是否存在
+try:
+    with open(font_path, 'rb') as f:
+        pass
+except FileNotFoundError:
+    print(f"錯誤：找不到字型檔案 '{font_path}'。請將字型檔案放置在腳本所在的資料夾中。")
+    # 你可以選擇在此處退出程式或採取其他措施
+    exit()
+
+# 將字型添加到 font manager
+fm.fontManager.addfont(font_path)
+
+# 設定 matplotlib 的字型
+plt.rc('font', family='Taipei Sans TC Beta')
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # 建立 Play Tennis 數據集
 data = {
@@ -36,6 +60,17 @@ print(X.head())
 print("\n目標變數：")
 print(y.head())
 
+# 製作堆疊長條圖
+crosstab = pd.crosstab(df['Outlook'], df['PlayTennis'])
+crosstab.plot(kind='bar', stacked=True, colormap='Set2')
+
+plt.title('Outlook 與 PlayTennis 的關係')
+plt.xlabel('Outlook')
+plt.ylabel('筆數')
+plt.tight_layout()
+plt.savefig("圖表1_Outlook_PlayTennis.png")
+plt.show()
+
 # 分割訓練集和測試集
 # 這裡由於數據集很小，我們通常會使用整個數據集來訓練，但為了展示流程，我們還是進行分割
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
@@ -64,6 +99,17 @@ print("\n混淆矩陣 (Confusion Matrix):")
 print(conf_matrix)
 print("\n分類報告 (Classification Report):")
 print(class_report)
+
+# 視覺化混淆矩陣
+plt.figure(figsize=(5, 4))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['No', 'Yes'], yticklabels=['No', 'Yes'])
+plt.title('混淆矩陣')
+plt.xlabel('預測值')
+plt.ylabel('實際值')
+plt.tight_layout()
+plt.savefig("圖表2_混淆矩陣.png")
+plt.show()
 
 import joblib
 
